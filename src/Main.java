@@ -1,7 +1,11 @@
 /**
  * 
  */
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
@@ -12,11 +16,17 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
-import com.google.gson.Gson;
+import com.google.*;
+import com.google.common.base.Predicate;
+import com.google.common.collect.FluentIterable;
+import com.google.common.collect.Lists;
 /**
  * @author atn01
  *
  */
+
+
+
 class Account {
 	String Account;
 
@@ -54,7 +64,7 @@ class Money extends Account {
 	}
 }
 
-class List extends Account {
+class objList extends Account {
 
 	public String getDateTime() {
 		return DateTime;
@@ -78,15 +88,22 @@ class List extends Account {
 	String DateTime;
 	String Recipient;
 	String Amount;
+	
+	public String toString() {
+		return (DateTime+" - "+Account+" - "+Recipient+" - "+Amount+"|");
+	}
 }
 
 
 
 public class Main implements MqttCallback {
 	
-	static ArrayList<List> transList = new ArrayList<List>();
+	static ArrayList<objList> transList = new ArrayList<objList>();
 	static ArrayList<Detail> accDetail = new ArrayList<Detail>();
 	static ArrayList<Money> accMoney  = new ArrayList<Money>();
+	
+
+
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -106,7 +123,7 @@ public class Main implements MqttCallback {
 	    MqttConnectOptions connOpts = new MqttConnectOptions();
 		
 		
-		//Gson gson = new Gson();	
+
 		Scanner sc = new Scanner(System.in);
 
 
@@ -114,6 +131,9 @@ public class Main implements MqttCallback {
         connOpts.isAutomaticReconnect();
         try {
 			Client.connect(connOpts);
+			Client.subscribe("Transaction/#");
+	        Client.subscribe("Transfer/#");
+	        Client.subscribe("Verification/#");
 		} catch (MqttSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -122,10 +142,7 @@ public class Main implements MqttCallback {
 			e.printStackTrace();
 		}
         
-        Client.subscribe("Transaction/#");
-        Client.subscribe("Transfer/#");
-        Client.subscribe("Verification/#");
-        Client.setCallback(this);
+        
 		
 		int Choice=0;
 		do {
@@ -161,6 +178,7 @@ public class Main implements MqttCallback {
 				sc.nextLine();
 				System.out.println();
 				System.out.println();
+				System.out.println(transList);
 				System.out.println();
 				System.out.println();
 			}
@@ -201,8 +219,7 @@ public class Main implements MqttCallback {
 				System.out.println();
 			}
 			
-		}while(Choice==0); 
-
+		}while(Choice != 4); 
 	}
 
 	@Override
@@ -226,7 +243,61 @@ public class Main implements MqttCallback {
 		String topicType = topic[1];
 		String topicUser = topic[2];
 		
-		
+		if (topicName.compareTo("transaction") == 0) {
+			if (topicType.compareTo("request") == 0) {
+				Predicate<objList> bySender = p -> p.Account.compareTo(topicUser) == 0;
+				Predicate<objList> byReceiver = p -> p.Recipient.compareTo(topicUser) == 0;
+				
+				List<objList> Result1 = FluentIterable.from(transList).filter(bySender).toList();
+				List<objList> Result2 = FluentIterable.from(transList).filter(byReceiver).toList();
+				
+				Result1.addAll(Result2);
+				
+				Collections.sort(Result1, new Comparator<objList>() {
+					DateFormat f = new SimpleDateFormat("dd/MM/yy hh:mm");
+					@Override
+					public int compare(objList o1, objList o2) {
+						// TODO Auto-generated method stub
+						try {
+							return f.parse(o1.getDateTime()).compareTo(f.parse(o2.getDateTime()));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						return 0;
+					}
+					
+				});
+				
+				MqttMessage messageFromServer = new MqttMessage(Result1.toString().getBytes());
+			}
+		}
+		if (topicName.compareTo("transfer") == 0) {
+			if (topicType.compareTo("request") == 0) {
+				Predicate<Money> username = p -> p.Account.equals(topicUser);	
+				List<Money> accountName = accMoney.stream().filter(p-> p.Account.equals(topicUser)).collect(Collectors.toList());
+			
+				if(accountName != null) {
+					
+					
+				}else if(accountName == null) {
+					
+				}
+				
+			}
+		}
+		if (topicName.compareTo("verification") == 0) {
+			if (topicType.compareTo("request") == 0) {
+				Predicate<Detail> username = p -> p.Account.equals(topicUser);
+				List<Detail> accountName = accDetail.stream().filter(p-> p.Account.equals(topicUser)).collect(Collectors.toList());
+				
+				if(accountName != null) {
+					
+				}else if(accountName == null) {
+						
+				}
+			}
+		}
 		
 		
 	}
@@ -245,7 +316,7 @@ public class Main implements MqttCallback {
 		
 	}
 	
-	public void transacionListResponse() {
+	public void transactionListResponse() {
 		
 		
 	}
@@ -259,5 +330,8 @@ public class Main implements MqttCallback {
 		
 	}
 
+	
 
 }
+
+

@@ -35,5 +35,12 @@
      		<version>2.8.2</version>
       		<scope>compile</scope>
     </dependency>
+    
+    <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+	<dependency>
+    	<groupId>com.google.guava</groupId>
+    	<artifactId>guava</artifactId>
+    	<version>23.0</version>
+	</dependency>
 	</dependencies>
 </project>
