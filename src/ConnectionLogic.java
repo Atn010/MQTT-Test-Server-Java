@@ -24,9 +24,9 @@ public class ConnectionLogic implements MqttCallback {
 	
 	// initiator
 	public ConnectionLogic() {
-		String broker = "tcp://192.168.56.104:1883";
-		String clientID = "server";
-		MemoryPersistence persistence = new MemoryPersistence();
+		String broke;
+		String clientID = null;
+		MemoryPersistence persistence = null;
 
 		MqttClient Client = null;
 		try {
@@ -52,6 +52,15 @@ public class ConnectionLogic implements MqttCallback {
 			e.printStackTrace();
 		}
 	}
+	
+	String broker = "tcp://192.168.56.104:1883";
+	String clientID = "server";
+	MemoryPersistence persistence = new MemoryPersistence();
+
+	MqttClient Client = null;
+	
+	
+	
 
 	@Override
 	public void connectionLost(Throwable arg0) {
@@ -66,7 +75,8 @@ public class ConnectionLogic implements MqttCallback {
 	}
 
 	@Override
-	public void messageArrived(String Topic, MqttMessage message) throws Exception {
+	public void messageArrived(String Topic, MqttMessage Message) throws Exception {
+
 		// TODO Auto-generated method stub
 
 		String[] topic = Topic.split("/");
@@ -100,8 +110,27 @@ public class ConnectionLogic implements MqttCallback {
 					}
 
 				});
+				
+				
 
-				MqttMessage messageFromServer = new MqttMessage(Result1.toString().getBytes());
+						
+				MqttMessage messageList = new MqttMessage(Result1.toString().getBytes());
+				messageList. setQos(1);                  
+				messageList. setRetained(true); 
+				
+				Client.publish(topicName+"/list/"+topicUser, messageList); 
+				
+				//List<Money> accountMoney = FluentIterable.from(data.accMoney).filter(accountName).toList();
+				
+				Predicate<Money> username = p -> p.Account.equals(topicUser);
+				List<Money> accountMoney = data.accMoney.stream().filter(p -> p.Account.equals(topicUser)).collect(Collectors.toList());
+				
+				MqttMessage messageMoney = new MqttMessage(accountMoney.get(0).getMoney().toString().getBytes());
+				messageMoney. setQos(1);                  
+				messageMoney. setRetained(true); 
+				
+				Client.publish(topicName+"/money/"+topicUser, messageMoney); 
+
 			}
 		}
 		if (topicName.compareTo("transfer") == 0) {
@@ -109,6 +138,13 @@ public class ConnectionLogic implements MqttCallback {
 				Predicate<Money> username = p -> p.Account.equals(topicUser);
 				List<Money> accountName = data.accMoney.stream().filter(p -> p.Account.equals(topicUser))
 						.collect(Collectors.toList());
+				
+				String[] message = Message.toString().split("/");
+				String messageDate = message[0];
+				String messageSender = message[1];
+				String messageReceiver = message[2];
+				String messageAmount = message[2];
+				
 
 				if (accountName != null) {
 
