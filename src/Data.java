@@ -72,7 +72,7 @@ class objList extends Account {
 	String Amount;
 	
 	public String toString() {
-		return (DateTime+" - "+Account+" - "+Recipient+" - "+Amount+"|");
+		return (DateTime+"~"+Account+"~"+Recipient+"~"+Amount+"|");
 	}
 }
 
@@ -82,9 +82,9 @@ class objList extends Account {
 public class Data {
     private static Data instance;
     public Data(){
-    	ArrayList<objList> transList = new ArrayList<objList>();
-    	ArrayList<Detail> accDetail = new ArrayList<Detail>();
-    	ArrayList<Money> accMoney  = new ArrayList<Money>();
+    	ArrayList<objList> transList;
+    	ArrayList<Detail> accDetail;
+    	ArrayList<Money> accMoney;
     }  
     
 	ArrayList<objList> transList = new ArrayList<objList>();

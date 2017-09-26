@@ -38,6 +38,9 @@ public class Main{
 		int Choice=0;
 		Scanner sc = new Scanner(System.in);
 		do {
+			if(data.transList.isEmpty() && data.accDetail.isEmpty() && data.accMoney.isEmpty()) {
+				dataEmpty();
+				}
 			
 			System.out.println("INFO XYZ SERVER");
 			System.out.println("*****************");
@@ -112,13 +115,78 @@ public class Main{
 				System.out.println();
 			}
 			
-		}while(Choice != 4); 
+		}while(Choice != 4);
+		
+		
 	}
-
-
+	
+	public static void dataEmpty() {
+		Data data = Data.getInstance();
+		
+		//Transfer List Populate 1
+		objList newTransList1 = new objList();
+		
+		newTransList1.setDateTime("09/09/17 17:20");
+		newTransList1.setAccount("username");
+		newTransList1.setRecipient("password");
+		newTransList1.setAmount("20000");
+		
+		data.transList.add(newTransList1);
+		
+		//Transfer List Populate 2
+		objList newTransList2 = new objList();
+		
+		newTransList2.setDateTime("05/10/17 11:00");
+		newTransList2.setAccount("password");
+		newTransList2.setRecipient("username");
+		newTransList2.setAmount("5000");
+		
+		data.transList.add(newTransList2);
+		
+		//Transfer List Populate 3
+		objList newTransList3 = new objList();
+		
+		newTransList3.setDateTime("31/12/16 09:20");
+		newTransList3.setAccount("username");
+		newTransList3.setRecipient("password");
+		newTransList3.setAmount("25000");
+		
+		data.transList.add(newTransList3);
+		
+		//Account Detail Populate 1
+		Detail newAccDetail1 = new Detail();
+		
+		newAccDetail1.setAccount("username");
+		newAccDetail1.setPassword("password");
+		
+		data.accDetail.add(newAccDetail1);
+		
+		//Account Detail Populate 2
+		Detail newAccDetail2 = new Detail();
+		
+		newAccDetail2.setAccount("password");
+		newAccDetail2.setPassword("username");
+		
+		data.accDetail.add(newAccDetail2);
+		
+		//Account Money Populate 1
+		Money newAccMoney1 = new Money();
+		
+		newAccMoney1.setAccount("username");
+		newAccMoney1.setMoney((long) 50000);
+		
+		data.accMoney.add(newAccMoney1);
+		
+		//Account Money Populate 2
+		Money newAccMoney2 = new Money();
+		
+		newAccMoney2.setAccount("password");
+		newAccMoney2.setMoney((long) 25000);
+		
+		data.accMoney.add(newAccMoney2);
 
 	
-
+	}
 }
 
 
