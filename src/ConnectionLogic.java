@@ -41,9 +41,9 @@ public class ConnectionLogic implements MqttCallback {
 		connOpts.isAutomaticReconnect();
 		try {
 			Client.connect(connOpts);
-			Client.subscribe("Transaction/#");
-			Client.subscribe("Transfer/#");
-			Client.subscribe("Verification/#");
+			Client.subscribe("Transaction/request/#");
+			Client.subscribe("Transfer/request/#");
+			Client.subscribe("Verification/request/#");
 		} catch (MqttSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,7 +79,7 @@ public class ConnectionLogic implements MqttCallback {
 
 		// TODO Auto-generated method stub
 
-		String[] topic = Topic.split("/");
+		String[] topic = Topic.split("~");
 		String topicName = topic[0];
 		String topicType = topic[1];
 		String topicUser = topic[2];
@@ -122,7 +122,7 @@ public class ConnectionLogic implements MqttCallback {
 				
 				//List<Money> accountMoney = FluentIterable.from(data.accMoney).filter(accountName).toList();
 				
-				Predicate<Money> username = p -> p.Account.equals(topicUser);
+				//Predicate<Money> username = p -> p.Account.equals(topicUser);
 				List<Money> accountMoney = data.accMoney.stream().filter(p -> p.Account.equals(topicUser)).collect(Collectors.toList());
 				
 				MqttMessage messageMoney = new MqttMessage(accountMoney.get(0).getMoney().toString().getBytes());
@@ -133,63 +133,132 @@ public class ConnectionLogic implements MqttCallback {
 
 			}
 		}
+		
+		//Transfer Request
 		if (topicName.compareTo("transfer") == 0) {
 			if (topicType.compareTo("request") == 0) {
-				Predicate<Money> username = p -> p.Account.equals(topicUser);
-				List<Money> accountName = data.accMoney.stream().filter(p -> p.Account.equals(topicUser))
-						.collect(Collectors.toList());
 				
-				String[] message = Message.toString().split("/");
+				//decode the message
+				String[] message = Message.toString().split("~");
 				String messageDate = message[0];
 				String messageSender = message[1];
 				String messageReceiver = message[2];
-				String messageAmount = message[2];
+				String messageAmountRaw = message[3];
+				Long messageAmount = Long.valueOf(messageAmountRaw).longValue();
+				
+				//Sender name
+				//Predicate<Money> username = p -> p.Account.equals(messageSender);
+				List<Money> accountSender = data.accMoney.stream().filter(p -> p.Account.equals(messageSender))
+						.collect(Collectors.toList());
+				
+				//Receiver Name
+				//Predicate<Money> username = p -> p.Account.equals(messageReceiver);
+				List<Money> accountReceiver = data.accMoney.stream().filter(p -> p.Account.equals(messageReceiver))
+						.collect(Collectors.toList());
 				
 
-				if (accountName != null) {
+				
 
-				} else if (accountName == null) {
+				if (accountSender != null) {
+					if(accountReceiver != null) {
+						
+						if((accountSender.get(0).getMoney() - messageAmount) <=0) {
+							//checks if Money is enough to transfer
+							String response = messageDate+"~confirmed";
+							
+							MqttMessage messageVerification = new MqttMessage(response.getBytes());
+							messageVerification. setQos(1);                  
+							messageVerification. setRetained(true); 
+							
+							Client.publish(topicName+"/response/"+topicUser, messageVerification);							
+							
+							
+						}else {
+							String response = messageDate+"~failed";
+							
+							MqttMessage messageVerification = new MqttMessage(response.getBytes());
+							messageVerification. setQos(1);                  
+							messageVerification. setRetained(true); 
+							
+							Client.publish(topicName+"/response/"+topicUser, messageVerification);
+						}
+					}else {
+						String response = messageDate+"~failed";
+						
+						MqttMessage messageVerification = new MqttMessage(response.getBytes());
+						messageVerification. setQos(1);                  
+						messageVerification. setRetained(true); 
+						
+						Client.publish(topicName+"/response/"+topicUser, messageVerification);
+					}
 
+				}else {
+					String response = messageDate+"~failed";
+					
+					MqttMessage messageVerification = new MqttMessage(response.getBytes());
+					messageVerification. setQos(1);                  
+					messageVerification. setRetained(true); 
+					
+					Client.publish(topicName+"/response/"+topicUser, messageVerification);
 				}
 
 			}
 		}
+		
+		//Verification Response
 		if (topicName.compareTo("verification") == 0) {
 			if (topicType.compareTo("request") == 0) {
+				
+				//search for the clientID
 				Predicate<Detail> username = p -> p.Account.equals(topicUser);
 				List<Detail> accountName = data.accDetail.stream().filter(p -> p.Account.equals(topicUser))
 						.collect(Collectors.toList());
+				
+				//Split The message
+				String[] message = Message.toString().split("~");
+				String messageDate = message[0];
+				String messageUsername = message[1];
+				String messagePassword = message[2];
 
-				if (accountName != null) {
+				if (!accountName.isEmpty()) {
+					if(accountName.get(0).getPassword().compareTo(messagePassword)==0) {
+						
+						//Send Date and Message
+						String response = messageDate+"~confirmed";
+						
+						MqttMessage messageVerification = new MqttMessage(response.getBytes());
+						messageVerification. setQos(1);                  
+						messageVerification. setRetained(true); 
+						
+						Client.publish(topicName+"/response/"+topicUser, messageVerification); 
+						
+					}else {
+						//Send Date and Message						
+						String response = messageDate+"~failed";
+						
+						MqttMessage messageVerification = new MqttMessage(response.getBytes());
+						messageVerification. setQos(1);                  
+						messageVerification. setRetained(true); 
+						
+						Client.publish(topicName+"/response/"+topicUser, messageVerification); 
+						
+					}
 
-				} else if (accountName == null) {
 
+				} else{
+					//Send Date and Message					
+					String response = messageDate+"~failed";
+					
+					MqttMessage messageVerification = new MqttMessage(response.getBytes());
+					messageVerification. setQos(1);                  
+					messageVerification. setRetained(true); 
+					
+					Client.publish(topicName+"/response/"+topicUser, messageVerification); 
 				}
 			}
 		}
 
 	}
 
-	public void transferProcessing(String Topic, String Message) {
-
-	}
-
-	public boolean transferResponse() {
-		return false;
-
-	}
-
-	public void transactionListResponse() {
-
-	}
-
-	public boolean accountResponse() {
-		return false;
-
-	}
-
-	public void accountAmountProcessing(String Topic, String Message) {
-
-	}
 
 }

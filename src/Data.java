@@ -72,7 +72,7 @@ class objList extends Account {
 	String Amount;
 	
 	public String toString() {
-		return (DateTime+" - "+Account+" - "+Recipient+" - "+Amount+"|");
+		return (DateTime+"~"+Account+"~"+Recipient+"~"+Amount+"|");
 	}
 }
 
