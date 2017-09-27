@@ -32,7 +32,8 @@ public class Main{
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Data data = Data.getInstance();
-		ConnectionLogic connLogic = new ConnectionLogic();
+		SenderLogic sender = SenderLogic.getInstance();
+		ReceiverLogic connLogic = new ReceiverLogic();
 		
 		
 		int Choice=0;
@@ -74,7 +75,7 @@ public class Main{
 				sc.nextLine();
 				System.out.println();
 				System.out.println();
-				System.out.println(data.transList);
+				//System.out.println(data.transList);
 				System.out.println();
 				System.out.println();
 			}

@@ -14,17 +14,20 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
 import org.eclipse.paho.client.mqttv3.MqttSecurityException;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.FluentIterable;
 
-public class ConnectionLogic implements MqttCallback {
+public class ReceiverLogic implements MqttCallback {
 	Data data = Data.getInstance();
+	SenderLogic sender = SenderLogic.getInstance();
 	
 	// initiator
-	public ConnectionLogic() {
+	public ReceiverLogic() {
+		/*
 		String broker = "tcp://192.168.56.104:1883";
 		String clientID = "server";
 		MemoryPersistence persistence = new MemoryPersistence();
@@ -42,9 +45,9 @@ public class ConnectionLogic implements MqttCallback {
 		connOpts.isAutomaticReconnect();
 		try {
 			Client.connect(connOpts);
-			Client.subscribe("Transaction/request/#");
-			Client.subscribe("Transfer/request/#");
-			Client.subscribe("Verification/request/#");
+			Client.subscribe("transaction/request/#");
+			Client.subscribe("transfer/request/#");
+			Client.subscribe("verification/request/#");
 		} catch (MqttSecurityException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -52,13 +55,11 @@ public class ConnectionLogic implements MqttCallback {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
-	
-	String broker = "tcp://192.168.56.104:1883";
-	String clientID = "server";
-	MemoryPersistence persistence = new MemoryPersistence();
+		*/
+		sender.Client.setCallback(this);
 
-	MqttClient Client = null;
+	}
+
 	
 	
 	
@@ -74,17 +75,23 @@ public class ConnectionLogic implements MqttCallback {
 		// TODO Auto-generated method stub
 
 	}
+	
 
 	@Override
 	public void messageArrived(String Topic, MqttMessage Message) throws Exception {
+		
+		System.out.println();
+		System.out.println("MQTT Topic: "+Topic);
+		System.out.println("MQTT Message: "+Message.toString());
 
 		// TODO Auto-generated method stub
 
 		//Split the Topic
-		String[] topic = Topic.split("~");
+		String[] topic = Topic.split("/");
 		String topicName = topic[0];
 		String topicType = topic[1];
 		String topicUser = topic[2];
+		
 
 		//Transaction Topic
 		if (topicName.compareTo("transaction") == 0) {
@@ -117,21 +124,16 @@ public class ConnectionLogic implements MqttCallback {
 				});
 				
 				//Send the data to User
-				MqttMessage messageList = new MqttMessage(Result1.toString().getBytes());
-				messageList. setQos(1);                  
-				messageList. setRetained(true); 
 				
-				Client.publish(topicName+"/list/"+topicUser, messageList); 
+				sender.sendMessage(topicName+"/list/"+topicUser, Result1.toString()); 
 				
 				//Get User money
 				List<Money> accountMoney = data.accMoney.stream().filter(p -> p.Account.equals(topicUser)).collect(Collectors.toList());
 				
 				//Send the info to User
-				MqttMessage messageMoney = new MqttMessage(accountMoney.get(0).getMoney().toString().getBytes());
-				messageMoney. setQos(1);                  
-				messageMoney. setRetained(true); 
 				
-				Client.publish(topicName+"/money/"+topicUser, messageMoney); 
+				
+				sender.sendMessage(topicName+"/money/"+topicUser, accountMoney.get(0).getMoney().toString()); 
 
 			}
 		}
@@ -167,11 +169,7 @@ public class ConnectionLogic implements MqttCallback {
 							//checks if Money is enough to transfer
 							String response = messageDate+"~confirmed";
 							
-							MqttMessage messageVerification = new MqttMessage(response.getBytes());
-							messageVerification. setQos(1);                  
-							messageVerification. setRetained(true); 
-							
-							Client.publish(topicName+"/response/"+topicUser, messageVerification);
+							sender.sendMessage(topicName+"/response/"+topicUser, response);
 							
 							//new TransferData
 							objList newTransList = new objList();
@@ -197,73 +195,73 @@ public class ConnectionLogic implements MqttCallback {
 							//failure
 							String response = messageDate+"~failed";
 							
-							MqttMessage messageVerification = new MqttMessage(response.getBytes());
-							messageVerification. setQos(1);                  
-							messageVerification. setRetained(true); 
-							
-							Client.publish(topicName+"/response/"+topicUser, messageVerification);
+							sender.sendMessage(topicName+"/response/"+topicUser, response);
 						}
 					}else {
 						//failure
 						String response = messageDate+"~failed";
 						
-						MqttMessage messageVerification = new MqttMessage(response.getBytes());
-						messageVerification. setQos(1);                  
-						messageVerification. setRetained(true); 
-						
-						Client.publish(topicName+"/response/"+topicUser, messageVerification);
+						sender.sendMessage(topicName+"/response/"+topicUser, response);
 					}
 
 				}else {
 					//failure
 					String response = messageDate+"~failed";
+
 					
-					MqttMessage messageVerification = new MqttMessage(response.getBytes());
-					messageVerification. setQos(1);                  
-					messageVerification. setRetained(true); 
-					
-					Client.publish(topicName+"/response/"+topicUser, messageVerification);
+					sender.sendMessage(topicName+"/response/"+topicUser, response);
 				}
 
 			}
 		}
 		
 		//Verification Response
-		if (topicName.compareTo("verification") == 0) {
-			if (topicType.compareTo("request") == 0) {
+		if (topicName.equals("verification")) {
+			if (topicType.equals("request")) {
 				
 				//search for the clientID
-				Predicate<Detail> username = p -> p.Account.equals(topicUser);
+				//Predicate<Detail> username = p -> p.Account.equals(topicUser);
 				List<Detail> accountName = data.accDetail.stream().filter(p -> p.Account.equals(topicUser))
 						.collect(Collectors.toList());
+				
+				System.out.println();
+				System.out.println();
+				System.out.println("The Data Pulled");
+				System.out.println("Username: "+accountName.get(0).Account);
+				System.out.println("Password: "+accountName.get(0).Password);
 				
 				//Split The message
 				String[] message = Message.toString().split("~");
 				String messageDate = message[0];
 				String messageUsername = message[1];
 				String messagePassword = message[2];
+				
+				System.out.println();
+				System.out.println();
+				System.out.println("The Message Pulled");
+				System.out.println("Date    : "+messageDate);
+				System.out.println("Username: "+messageUsername);
+				System.out.println("Password: "+messagePassword);
 
 				if (!accountName.isEmpty()) {
-					if(accountName.get(0).getPassword().compareTo(messagePassword)==0) {
+					System.out.println("Not EMPTY!");
+					if(accountName.get(0).Password.equals(messagePassword)) {
+						System.out.println("Sucessfully Getting in");
 						
 						//Send Date and Message
 						String response = messageDate+"~confirmed";
 						
-						MqttMessage messageVerification = new MqttMessage(response.getBytes());
-						messageVerification. setQos(1);                  
-						messageVerification. setRetained(true); 
+						System.out.println(response);
 						
-						Client.publish(topicName+"/response/"+topicUser, messageVerification); 
+						
+						sender.sendMessage(topicName+"/response/"+topicUser, response); 
 						
 					}else {
 						//Send Date and Message						
 						String response = messageDate+"~failed";
-						
-						MqttMessage messageVerification = new MqttMessage(response.getBytes());
-						messageVerification. setQos(1);                  
-						messageVerification. setRetained(true); 
-						
-						Client.publish(topicName+"/response/"+topicUser, messageVerification); 
+						System.out.println("Failed");
+
+						sender.sendMessage(topicName+"/response/"+topicUser, response); 
 						
 					}
 
@@ -271,12 +269,9 @@ public class ConnectionLogic implements MqttCallback {
 				} else{
 					//Send Date and Message					
 					String response = messageDate+"~failed";
+				
 					
-					MqttMessage messageVerification = new MqttMessage(response.getBytes());
-					messageVerification. setQos(1);                  
-					messageVerification. setRetained(true); 
-					
-					Client.publish(topicName+"/response/"+topicUser, messageVerification); 
+					sender.sendMessage(topicName+"/response/"+topicUser, response); 
 				}
 			}
 		}
