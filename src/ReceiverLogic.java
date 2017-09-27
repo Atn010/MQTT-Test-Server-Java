@@ -96,14 +96,12 @@ public class ReceiverLogic implements MqttCallback {
 		//Transaction Topic
 		if (topicName.compareTo("transaction") == 0) {
 			if (topicType.compareTo("request") == 0) {
-				//Create Predicate if contain the user in Sender or Receiver
-				Predicate<objList> bySender = p -> p.Account.compareTo(topicUser) == 0;
-				Predicate<objList> byReceiver = p -> p.Recipient.compareTo(topicUser) == 0;
-
-				//Create a List containing the user either as a Sender or a Receiver 
-				List<objList> Result1 = FluentIterable.from(data.transList).filter(bySender).toList();
-				List<objList> Result2 = FluentIterable.from(data.transList).filter(byReceiver).toList();
-
+				
+				List<objList> Result1 = data.transList.stream().filter(p -> p.Account.equals(topicUser))
+						.collect(Collectors.toList());
+				List<objList> Result2 = data.transList.stream().filter(p -> p.Recipient.equals(topicUser))
+						.collect(Collectors.toList());
+				
 				// Combine both List
 				Result1.addAll(Result2);
 
@@ -154,18 +152,17 @@ public class ReceiverLogic implements MqttCallback {
 				List<Money> accountSender = data.accMoney.stream().filter(p -> p.Account.equals(messageSender))
 						.collect(Collectors.toList());
 				
-				//heck Receiver Name
+				//check Receiver Name
 				List<Money> accountReceiver = data.accMoney.stream().filter(p -> p.Account.equals(messageReceiver))
 						.collect(Collectors.toList());
 					
 
 				//if Sender is not false
-				if (accountSender != null) {
+				if (!accountSender.isEmpty()) {
 					//if Receiver is not false
-					if(accountReceiver != null) {
-						
+					if(!accountReceiver.isEmpty()) {
 						//if Money is available
-						if((accountSender.get(0).getMoney() - messageAmount) <=0) {
+						if((accountSender.get(0).getMoney() - messageAmount) >=0) {
 							//checks if Money is enough to transfer
 							String response = messageDate+"~confirmed";
 							
@@ -179,16 +176,32 @@ public class ReceiverLogic implements MqttCallback {
 							newTransList.setAmount(messageAmountRaw);
 							
 							data.transList.add(newTransList);
-
-							//Change Sender Money
-							int senderMoney = data.accMoney.indexOf(accountSender);
-							long newSenderMoney = data.accMoney.get(senderMoney).Money - messageAmount;
-							data.accMoney.get(senderMoney).setMoney(newSenderMoney);
 							
-							//Change Receiver Money
-							int receiverMoney = data.accMoney.indexOf(accountReceiver);
-							long newReceiverMoney = data.accMoney.get(receiverMoney).Money - messageAmount;
-							data.accMoney.get(receiverMoney).setMoney(newReceiverMoney);							
+							
+							int loopBreaker = 0;
+							for(int i=0;i < data.accMoney.size();i++) {
+								if(data.accMoney.get(i).Account.equals(messageSender)) {
+									System.out.println("Begin Change on Sender");
+									long newSenderMoney = data.accMoney.get(i).Money - messageAmount;
+									System.out.println("New Sender Money: "+newSenderMoney);
+									data.accMoney.get(i).setMoney(newSenderMoney);
+									System.out.println("Now Sender Money: "+data.accMoney.get(i).Money);
+									loopBreaker++;
+								}
+								if(data.accMoney.get(i).Account.equals(messageReceiver)) {
+									System.out.println("Begin Change on Receiver");
+									long newReceiverMoney = data.accMoney.get(i).Money + messageAmount;
+									System.out.println("New Receiver Money: "+newReceiverMoney);
+									data.accMoney.get(i).setMoney(newReceiverMoney);
+									System.out.println("Now Receiver Money: "+data.accMoney.get(i).Money);
+									loopBreaker++;
+									
+								}
+								if(loopBreaker >=2) {
+									System.out.println("The End");
+									break;
+								}
+							}						
 							
 							
 						}else {
@@ -224,34 +237,18 @@ public class ReceiverLogic implements MqttCallback {
 				List<Detail> accountName = data.accDetail.stream().filter(p -> p.Account.equals(topicUser))
 						.collect(Collectors.toList());
 				
-				System.out.println();
-				System.out.println();
-				System.out.println("The Data Pulled");
-				System.out.println("Username: "+accountName.get(0).Account);
-				System.out.println("Password: "+accountName.get(0).Password);
-				
 				//Split The message
 				String[] message = Message.toString().split("~");
 				String messageDate = message[0];
 				String messageUsername = message[1];
 				String messagePassword = message[2];
-				
-				System.out.println();
-				System.out.println();
-				System.out.println("The Message Pulled");
-				System.out.println("Date    : "+messageDate);
-				System.out.println("Username: "+messageUsername);
-				System.out.println("Password: "+messagePassword);
+
 
 				if (!accountName.isEmpty()) {
-					System.out.println("Not EMPTY!");
 					if(accountName.get(0).Password.equals(messagePassword)) {
-						System.out.println("Sucessfully Getting in");
 						
 						//Send Date and Message
 						String response = messageDate+"~confirmed";
-						
-						System.out.println(response);
 						
 						
 						sender.sendMessage(topicName+"/response/"+topicUser, response); 

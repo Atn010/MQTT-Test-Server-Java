@@ -154,6 +154,26 @@ public class Main{
 		
 		data.transList.add(newTransList3);
 		
+		//Transfer List Populate 4
+		objList newTransList4 = new objList();
+		
+		newTransList4.setDateTime("31/10/16 09:20");
+		newTransList4.setAccount("admin");
+		newTransList4.setRecipient("password");
+		newTransList4.setAmount("2500");
+		
+		data.transList.add(newTransList4);
+		
+		//Transfer List Populate 5
+		objList newTransList5 = new objList();
+		
+		newTransList5.setDateTime("31/11/16 09:02");
+		newTransList5.setAccount("admin");
+		newTransList5.setRecipient("username");
+		newTransList5.setAmount("25000");
+		
+		data.transList.add(newTransList5);
+		
 		//Account Detail Populate 1
 		Detail newAccDetail1 = new Detail();
 		
@@ -170,6 +190,14 @@ public class Main{
 		
 		data.accDetail.add(newAccDetail2);
 		
+		//Account Detail Populate 3
+		Detail newAccDetail3 = new Detail();
+		
+		newAccDetail3.setAccount("admin");
+		newAccDetail3.setPassword("admin");
+		
+		data.accDetail.add(newAccDetail3);
+		
 		//Account Money Populate 1
 		Money newAccMoney1 = new Money();
 		
@@ -185,6 +213,14 @@ public class Main{
 		newAccMoney2.setMoney((long) 25000);
 		
 		data.accMoney.add(newAccMoney2);
+		
+		//Account Money Populate 3
+		Money newAccMoney3 = new Money();
+		
+		newAccMoney3.setAccount("admin");
+		newAccMoney3.setMoney((long) 25000000);
+		
+		data.accMoney.add(newAccMoney3);
 
 	
 	}
