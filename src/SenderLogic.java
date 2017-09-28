@@ -19,7 +19,7 @@ public class SenderLogic {
 		ConnectToBroker();
     }  
     
-	String broker = "tcp://192.168.56.104:1883";
+	String broker = "tcp://192.168.56.101:1883";
 	String clientID = "server";
 	MemoryPersistence persistence = new MemoryPersistence();
 
@@ -28,7 +28,7 @@ public class SenderLogic {
 
     public void reConnectToBroker() {
         connOpts.setCleanSession(false);
-        connOpts.isAutomaticReconnect();
+        connOpts.setAutomaticReconnect(true);
         
         
         try {

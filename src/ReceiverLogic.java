@@ -1,25 +1,15 @@
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.eclipse.paho.client.mqttv3.MqttPersistenceException;
-import org.eclipse.paho.client.mqttv3.MqttSecurityException;
-import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
-
-import com.google.common.base.Predicate;
-import com.google.common.collect.FluentIterable;
 
 public class ReceiverLogic implements MqttCallback {
 	Data data = Data.getInstance();
@@ -83,6 +73,7 @@ public class ReceiverLogic implements MqttCallback {
 		System.out.println();
 		System.out.println("MQTT Topic: "+Topic);
 		System.out.println("MQTT Message: "+Message.toString());
+		TimeUnit.MILLISECONDS.sleep(10000);
 
 		// TODO Auto-generated method stub
 
