@@ -17,42 +17,9 @@ public class ReceiverLogic implements MqttCallback {
 	
 	// initiator
 	public ReceiverLogic() {
-		/*
-		String broker = "tcp://192.168.56.104:1883";
-		String clientID = "server";
-		MemoryPersistence persistence = new MemoryPersistence();
-
-		MqttClient Client = null;
-		try {
-			Client = new MqttClient(broker, clientID, persistence);
-		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		MqttConnectOptions connOpts = new MqttConnectOptions();
-
-		connOpts.setCleanSession(false);
-		connOpts.isAutomaticReconnect();
-		try {
-			Client.connect(connOpts);
-			Client.subscribe("transaction/request/#");
-			Client.subscribe("transfer/request/#");
-			Client.subscribe("verification/request/#");
-		} catch (MqttSecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
 		sender.Client.setCallback(this);
 
 	}
-
-	
-	
-	
 
 	@Override
 	public void connectionLost(Throwable arg0) {
@@ -88,7 +55,7 @@ public class ReceiverLogic implements MqttCallback {
 		if (topicName.compareTo("transaction") == 0) {
 			if (topicType.compareTo("request") == 0) {
 				
-				List<objList> Result1 = data.transList.stream().filter(p -> p.Account.equals(topicUser))
+				List<objList> Result1 = data.transList.stream().filter(p -> p.AccountName.equals(topicUser))
 						.collect(Collectors.toList());
 				List<objList> Result2 = data.transList.stream().filter(p -> p.Recipient.equals(topicUser))
 						.collect(Collectors.toList());
@@ -117,7 +84,7 @@ public class ReceiverLogic implements MqttCallback {
 				sender.sendMessage(topicName+"/list/"+topicUser, Result1.toString()); 
 				
 				//Get User money
-				List<Money> accountMoney = data.accMoney.stream().filter(p -> p.Account.equals(topicUser)).collect(Collectors.toList());
+				List<Money> accountMoney = data.accMoney.stream().filter(p -> p.AccountName.equals(topicUser)).collect(Collectors.toList());
 				
 				//Send the info to User
 				
@@ -140,11 +107,11 @@ public class ReceiverLogic implements MqttCallback {
 				Long messageAmount = Long.valueOf(messageAmountRaw).longValue();
 				
 				//check Sender name
-				List<Money> accountSender = data.accMoney.stream().filter(p -> p.Account.equals(messageSender))
+				List<Money> accountSender = data.accMoney.stream().filter(p -> p.AccountName.equals(messageSender))
 						.collect(Collectors.toList());
 				
 				//check Receiver Name
-				List<Money> accountReceiver = data.accMoney.stream().filter(p -> p.Account.equals(messageReceiver))
+				List<Money> accountReceiver = data.accMoney.stream().filter(p -> p.AccountName.equals(messageReceiver))
 						.collect(Collectors.toList());
 					
 
@@ -168,10 +135,10 @@ public class ReceiverLogic implements MqttCallback {
 							
 							data.transList.add(newTransList);
 							
-							
+							//find and replace data
 							int loopBreaker = 0;
 							for(int i=0;i < data.accMoney.size();i++) {
-								if(data.accMoney.get(i).Account.equals(messageSender)) {
+								if(data.accMoney.get(i).AccountName.equals(messageSender)) {
 									System.out.println("Begin Change on Sender");
 									long newSenderMoney = data.accMoney.get(i).Money - messageAmount;
 									System.out.println("New Sender Money: "+newSenderMoney);
@@ -179,7 +146,7 @@ public class ReceiverLogic implements MqttCallback {
 									System.out.println("Now Sender Money: "+data.accMoney.get(i).Money);
 									loopBreaker++;
 								}
-								if(data.accMoney.get(i).Account.equals(messageReceiver)) {
+								if(data.accMoney.get(i).AccountName.equals(messageReceiver)) {
 									System.out.println("Begin Change on Receiver");
 									long newReceiverMoney = data.accMoney.get(i).Money + messageAmount;
 									System.out.println("New Receiver Money: "+newReceiverMoney);
@@ -225,7 +192,7 @@ public class ReceiverLogic implements MqttCallback {
 				
 				//search for the clientID
 				//Predicate<Detail> username = p -> p.Account.equals(topicUser);
-				List<Detail> accountName = data.accDetail.stream().filter(p -> p.Account.equals(topicUser))
+				List<Detail> accountName = data.accDetail.stream().filter(p -> p.AccountName.equals(topicUser))
 						.collect(Collectors.toList());
 				
 				//Split The message

@@ -50,7 +50,7 @@ public class Main{
 				for(int i =0; i<data.transList.size();i++){
 					System.out.print(i+1);
 					System.out.print(" | "+data.transList.get(i).DateTime);
-					System.out.print(" | "+data.transList.get(i).Account);
+					System.out.print(" | "+data.transList.get(i).getAccount());
 					System.out.print(" | "+data.transList.get(i).Recipient);
 					System.out.println(" | "+data.transList.get(i).Amount);					
 				}
@@ -70,7 +70,7 @@ public class Main{
 				System.out.println("*************************************************");				
 				for(int i =0; i<data.accDetail.size();i++){
 					System.out.print(i+1);
-					System.out.print(" | "+data.accDetail.get(i).Account);
+					System.out.print(" | "+data.accDetail.get(i).getAccount());
 					System.out.println(" | "+data.accDetail.get(i).Password);					
 				}
 				sc.nextLine();
@@ -88,7 +88,7 @@ public class Main{
 				System.out.println("*************************************************");				
 				for(int i =0; i<data.accMoney.size();i++){
 					System.out.print(i+1);
-					System.out.print(" | "+data.accMoney.get(i).Account);
+					System.out.print(" | "+data.accMoney.get(i).getAccount());
 					System.out.println(" | "+data.accMoney.get(i).Money);					
 				}
 				sc.nextLine();
