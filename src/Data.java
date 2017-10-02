@@ -10,16 +10,15 @@ import java.util.ArrayList;
  */
 
 class Account {
-	String Account;
+	String AccountName;
 
 	public String getAccount() {
-		return Account;
+		return AccountName;
 	}
 
 	public void setAccount(String account) {
-		Account = account;
+		AccountName = account;
 	}
-
 }
 
 class Detail extends Account {
@@ -77,7 +76,7 @@ class objList extends Account {
 	String Amount;
 
 	public String toString() {
-		return (DateTime + "~" + Account + "~" + Recipient + "~" + Amount);
+		return (DateTime + "~" + AccountName + "~" + Recipient + "~" + Amount);
 	}
 }
 
