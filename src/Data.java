@@ -1,16 +1,36 @@
+
 import java.util.ArrayList;
 
-/**
- * 
- */
 
 /**
  * @author atn01
  *
  */
 
+public class Data {
+	private static Data instance;
+
+	public static Data getInstance() {
+		if (instance == null) {
+			instance = new Data();
+		}
+		return instance;
+	}
+
+	ArrayList<Detail> accDetail = new ArrayList<Detail>();
+	ArrayList<Money> accMoney = new ArrayList<Money>();
+	ArrayList<objList> transList = new ArrayList<objList>();
+
+	public Data() {
+		ArrayList<objList> transList;
+		ArrayList<Detail> accDetail;
+		ArrayList<Money> accMoney;
+	}
+
+}
+
 class Account {
-	String AccountName;
+	public String AccountName;
 
 	public String getAccount() {
 		return AccountName;
@@ -47,57 +67,35 @@ class Money extends Account {
 
 class objList extends Account {
 
-	public String getDateTime() {
-		return DateTime;
+	String Amount;
+
+	String DateTime;
+
+	String Recipient;
+
+	public String getAmount() {
+		return Amount;
 	}
 
-	public void setDateTime(String dateTime) {
-		DateTime = dateTime;
+	public String getDateTime() {
+		return DateTime;
 	}
 
 	public String getRecipient() {
 		return Recipient;
 	}
 
+	public void setAmount(String amount) {
+		Amount = amount;
+	}
+	public void setDateTime(String dateTime) {
+		DateTime = dateTime;
+	}
 	public void setRecipient(String recipient) {
 		Recipient = recipient;
 	}
 
-	public String getAmount() {
-		return Amount;
-	}
-
-	public void setAmount(String amount) {
-		Amount = amount;
-	}
-
-	String DateTime;
-	String Recipient;
-	String Amount;
-
 	public String toString() {
 		return (DateTime + "~" + AccountName + "~" + Recipient + "~" + Amount);
 	}
-}
-
-public class Data {
-	private static Data instance;
-
-	public Data() {
-		ArrayList<objList> transList;
-		ArrayList<Detail> accDetail;
-		ArrayList<Money> accMoney;
-	}
-
-	ArrayList<objList> transList = new ArrayList<objList>();
-	ArrayList<Detail> accDetail = new ArrayList<Detail>();
-	ArrayList<Money> accMoney = new ArrayList<Money>();
-
-	public static Data getInstance() {
-		if (instance == null) {
-			instance = new Data();
-		}
-		return instance;
-	}
-
 }
