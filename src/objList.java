@@ -25,9 +25,11 @@ class objList extends Account {
 	public void setAmount(String amount) {
 		Amount = amount;
 	}
+
 	public void setDateTime(String dateTime) {
 		DateTime = dateTime;
 	}
+
 	public void setRecipient(String recipient) {
 		Recipient = recipient;
 	}
