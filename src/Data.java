@@ -1,11 +1,8 @@
-
-import java.util.ArrayList;
-
-
 /**
- * @author atn01
+ * @author atn010
  *
  */
+import java.util.ArrayList;
 
 public class Data {
 	private static Data instance;
