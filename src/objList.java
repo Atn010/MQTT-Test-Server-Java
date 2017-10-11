@@ -33,7 +33,8 @@ class objList extends Account {
 	public void setRecipient(String recipient) {
 		Recipient = recipient;
 	}
-
+	
+	/// @override toString Function
 	public String toString() {
 		return (DateTime + "~" + AccountName + "~" + Recipient + "~" + Amount);
 	}

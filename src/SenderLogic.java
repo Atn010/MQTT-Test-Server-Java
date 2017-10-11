@@ -55,9 +55,8 @@ public class SenderLogic {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-    	
     }
+    
     /**
      * This Method attempts to reconnect o server
      */
