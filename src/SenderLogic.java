@@ -1,3 +1,7 @@
+/**
+ * @author Antonius George Sunggeriwan <atn010g@gmail.com>
+ *
+ */
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -8,6 +12,20 @@ import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 
 public class SenderLogic {
     private static SenderLogic instance;
+    public static SenderLogic getInstance(){
+        if(instance == null){
+            instance = new SenderLogic();
+        }
+        return instance;
+    }  
+    
+	String broker = "tcp://192.168.56.101:1883";
+	MqttClient Client = null;
+	String clientID = "server";
+
+	MqttConnectOptions connOpts = new MqttConnectOptions();
+	MemoryPersistence persistence = new MemoryPersistence();
+
     public SenderLogic(){
 		String broker;
 		String clientID;
@@ -17,31 +35,11 @@ public class SenderLogic {
 		MqttConnectOptions connOpts;
 		
 		ConnectToBroker();
-    }  
-    
-	String broker = "tcp://192.168.56.101:1883";
-	String clientID = "server";
-	MemoryPersistence persistence = new MemoryPersistence();
-
-	MqttClient Client = null;
-	MqttConnectOptions connOpts = new MqttConnectOptions();
-
-    public void reConnectToBroker() {
-        connOpts.setCleanSession(false);
-        connOpts.setAutomaticReconnect(true);
-        
-        
-        try {
-			Client.connect(connOpts);
-		} catch (MqttSecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
     }
     
+    /**
+     * Connect to the Broker
+     */
     public void ConnectToBroker() {
     	connOpts.setCleanSession(false);
         connOpts.isAutomaticReconnect();
@@ -49,6 +47,7 @@ public class SenderLogic {
 		try {
 			Client = new MqttClient(broker, clientID, persistence);
 			Client.connect(connOpts);
+			
 			Client.subscribe("transaction/request/#");
 			Client.subscribe("transfer/request/#");
 			Client.subscribe("verification/request/#");
@@ -56,56 +55,63 @@ public class SenderLogic {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-    	
     }
     
+    /**
+     * This Method attempts to reconnect o server
+     */
+	public void reConnectToBroker() {
+        connOpts.setCleanSession(false);
+        connOpts.setAutomaticReconnect(true);
+        
+        try {
+			Client.connect(connOpts);
+		} catch (MqttSecurityException e) {
+			e.printStackTrace();
+		} catch (MqttException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    
+	/**
+	 * 
+	 * @param Topic
+	 * @param message
+	 * 
+	 * Check if the client is connected.
+	 * if not, attempt to reconnect to broker
+	 * 
+	 * Send the Message to the corresponding Topic by
+	 * Configure the message for retained and quality of service
+	 * And try to send message if connected
+	 */
 	public void sendMessage(String Topic, String message) {
+		//configure and send the appropriate message to the specified topic
+		
 		if(!Client.isConnected()) {
 			reConnectToBroker();
 		}
-		
-		System.out.println();
-		System.out.println("Publishing Begin");
 		
 		MqttMessage Message = new MqttMessage(message.getBytes());
 		Message. setQos(1);                  
 		Message. setRetained(true);
 		
-		System.out.println("Message Configured");
-		
 		
 		try {
-			System.out.println();
-			System.out.println();
-			//Client.subscribe(Topic);
-			//System.out.println("Topic Subscribed");
 			Client.publish(Topic, Message);
-			System.out.println("Message Sent");
-			//Client.unsubscribe(Topic);
-			System.out.println("Message Delivered");
 		} catch (MqttPersistenceException e) {
-			// TODO Auto-generated catch block
-			System.out.println();
-			System.out.println("Persistence Error");
 			System.out.println(e.getCause());
 			System.out.println(e.getMessage());
 			System.out.println(e.getStackTrace());
 			e.printStackTrace();
 		} catch (MqttException e) {
-			// TODO Auto-generated catch block
-			System.out.println("I have no idea what happened Error");
+			System.out.println(e.getCause());
+			System.out.println(e.getMessage());
+			System.out.println(e.getStackTrace());
 			e.printStackTrace();
 		} 
 		
 	}
-    
-    
-	public static SenderLogic getInstance(){
-        if(instance == null){
-            instance = new SenderLogic();
-        }
-        return instance;
-    }
 
 }
