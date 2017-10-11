@@ -38,7 +38,7 @@ public class ReceiverLogic implements MqttCallback {
 	/***
 	 * @Override The messageArrived method is provided by the library to receive
 	 *           message from the broker The method included the corresponding Topic
-	 *           that is previously subcribed to and Message
+	 *           that is previously subscribed to and Message
 	 */
 	public void messageArrived(String Topic, MqttMessage Message) throws Exception {
 		TimeUnit.MILLISECONDS.sleep(10000); // This is to simulate Network Lag
@@ -55,6 +55,17 @@ public class ReceiverLogic implements MqttCallback {
 
 	}
 
+	/**
+	 * @param Message
+	 * @param topicName
+	 * @param topicType
+	 * @param topicUser
+	 * 
+	 * This check if the message is
+	 * a Transaction Request
+	 * a Transfer Request
+	 * or, a Verification Request
+	 */
 	private void filterAndDelegateTopic(MqttMessage Message, String topicName, String topicType, String topicUser) {
 		/// Transaction Topic
 		if (topicName.compareTo("transaction") == 0) {
@@ -79,7 +90,14 @@ public class ReceiverLogic implements MqttCallback {
 		}
 	}
 
-	/// This method adds the new transaction information into the list
+	/**
+	 * @param messageDate
+	 * @param messageSender
+	 * @param messageReceiver
+	 * @param messageAmountRaw
+	 * 
+	 * This Method Add the new information into the transaction list
+	 */
 	private void addNewTransactionInformation(String messageDate, String messageSender, String messageReceiver,
 			String messageAmountRaw) {	
 		objList newTransList = new objList();
@@ -92,7 +110,19 @@ public class ReceiverLogic implements MqttCallback {
 		data.transList.add(newTransList);
 	}
 
-	/// this method process the Transaction Request
+	/**
+	 * @param topicName
+	 * @param topicUser
+	 * 
+	 * Process the Transaction Request By
+	 * Get all the Requester in the Sender Field in the Transaction List into a list
+	 * Get all the Requester in the Receiver Field in the Transaction List into a list
+	 * Combine both list into one
+	 * Send the list into the Requester
+	 * 
+	 * Get Amount of money
+	 * Send the Amount of Money into the Requester
+	 */
 	private void processTransactionRequest(String topicName, String topicUser) {
 		
 		List<objList> Result1 = data.transList.stream().filter(p -> p.AccountName.equals(topicUser))
@@ -132,6 +162,21 @@ public class ReceiverLogic implements MqttCallback {
 		sender.sendMessage(topicName + "/money/" + topicUser, accountMoney.get(0).getMoney().toString());
 	}
 
+	/**
+	 * @param Message
+	 * @param topicName
+	 * @param topicUser
+	 * 
+	 * This process the Transfer Request by
+	 * Splitting the corresponding Message parts
+	 * Convert the money into a Long Integer from String
+	 * Find both the source and target of the transfer
+	 * 
+	 * Check if both source and target is available
+	 * check if the source has enough money to transfer
+	 * 
+	 * and send success message, add new transaction information and update the amount of money
+	 */
 	private void processTransferRequest(MqttMessage Message, String topicName, String topicUser) {
 		/// Split the Topic into parts and store it in a variable
 		String[] message = Message.toString().split("~");
@@ -143,29 +188,24 @@ public class ReceiverLogic implements MqttCallback {
 		
 		Long messageAmount = Long.valueOf(messageAmountRaw).longValue(); ///< This converts Amount of Money from String to Long Integer
 
-		/// This method checks the
+		/// This method Find the Source Account
 		List<Money> accountSender = data.accMoney.stream().filter(p -> p.AccountName.equals(messageSender))
 				.collect(Collectors.toList());
 
-		// check Receiver Name
+		/// This method Find the Target Account
 		List<Money> accountReceiver = data.accMoney.stream().filter(p -> p.AccountName.equals(messageReceiver))
 				.collect(Collectors.toList());
 
-		// if Sender is not false
 		if (!accountSender.isEmpty()) {
-			// if Receiver is not false
 			if (!accountReceiver.isEmpty()) {
-				// if Money is available
+				
+				/// Checks if Transfer Request amount does not exceed balance 
 				if ((accountSender.get(0).getMoney() - messageAmount) >= 0) {
-					// checks if Money is enough to transfer
-					String response = messageDate + "~confirmed";
 
-					sender.sendMessage(topicName + "/response/" + topicUser, response);
+					sendSuccess(topicName, topicUser, messageDate);
 
-					// new TransferData
 					addNewTransactionInformation(messageDate, messageSender, messageReceiver, messageAmountRaw);
 
-					// find and replace data
 					updateAccountMoney(messageSender, messageReceiver, messageAmount);
 
 				} else {
@@ -180,56 +220,82 @@ public class ReceiverLogic implements MqttCallback {
 		}
 	}
 
+	private void sendSuccess(String topicName, String topicUser, String messageDate) {
+		String response = messageDate + "~confirmed";
+
+		sender.sendMessage(topicName + "/response/" + topicUser, response);
+	}
+
 	private void sendFailure(String topicName, String topicUser, String messageDate) {
 		// failure
 		String response = messageDate + "~failed";
 		sender.sendMessage(topicName + "/response/" + topicUser, response);
 	}
 
+	/**
+	 * @param Message
+	 * @param topicName
+	 * @param topicUser
+	 * 
+	 * This Method Process the Verification Request by
+	 * Finding the username and password of the corresponding accont
+	 * Checking if it is in the system
+	 * 
+	 * and send success message if it is correct, else it is false
+	 */
 	private void processVerificationRequest(MqttMessage Message, String topicName, String topicUser) {
-		// search for the clientID
-		// Predicate<Detail> username = p -> p.Account.equals(topicUser);
+		
+		/// This method Find the ClientID Account
 		List<Detail> accountName = data.accDetail.stream().filter(p -> p.AccountName.equals(topicUser))
 				.collect(Collectors.toList());
 
-		// Split The message
+		/// Split the Topic into parts and store it in a variable
 		String[] message = Message.toString().split("~");
-		String messageDate = message[0];
-		String messageUsername = message[1];
-		String messagePassword = message[2];
+		
+		String messageDate = message[0]; ///< This store the Date of the message into a variable
+		String messageUsername = message[1]; ///< This store the Username into a variable
+		String messagePassword = message[2]; ///< This store the Password into a variable
 
 		if (!accountName.isEmpty()) {
 			if (accountName.get(0).Password.equals(messagePassword)) {
 
-				// Send Date and Message
-				String response = messageDate + "~confirmed";
-
-				sender.sendMessage(topicName + "/response/" + topicUser, response);
+				sendSuccess(topicName, topicUser, messageDate);
 
 			} else {
-				// Send Date and Message
 				sendFailure(topicName, topicUser, messageDate);
 
 			}
-
 		} else {
 			sendFailure(topicName, topicUser, messageDate);
 		}
 	}
 
+	/**
+	 * 
+	 * @param messageSender
+	 * @param messageReceiver
+	 * @param messageAmount
+	 * 
+	 * This Method Replaces the Money for Sender and Receiver to reflect a transfer
+	 */
 	private void updateAccountMoney(String messageSender, String messageReceiver, Long messageAmount) {
 		int loopBreaker = 0;
+		boolean senderAmountUpdateIsDone = false;
+		boolean receiverAmountUpdateIsDone = false;
+		
+		
 		for (int i = 0; i < data.accMoney.size(); i++) {
-			if (data.accMoney.get(i).AccountName.equals(messageSender)) {
+			if (data.accMoney.get(i).AccountName.equals(messageSender) && !senderAmountUpdateIsDone) {
 				long newSenderMoney = data.accMoney.get(i).Money - messageAmount;
 				data.accMoney.get(i).setMoney(newSenderMoney);
 				loopBreaker++;
+				senderAmountUpdateIsDone = true;
 			}
-			if (data.accMoney.get(i).AccountName.equals(messageReceiver)) {
+			if (data.accMoney.get(i).AccountName.equals(messageReceiver) && !receiverAmountUpdateIsDone) {
 				long newReceiverMoney = data.accMoney.get(i).Money + messageAmount;
 				data.accMoney.get(i).setMoney(newReceiverMoney);
 				loopBreaker++;
-
+				receiverAmountUpdateIsDone = true;
 			}
 			if (loopBreaker >= 2) {
 				break;

@@ -37,6 +37,9 @@ public class SenderLogic {
 		ConnectToBroker();
     }
     
+    /**
+     * Connect to the Broker
+     */
     public void ConnectToBroker() {
     	connOpts.setCleanSession(false);
         connOpts.isAutomaticReconnect();
@@ -44,6 +47,7 @@ public class SenderLogic {
 		try {
 			Client = new MqttClient(broker, clientID, persistence);
 			Client.connect(connOpts);
+			
 			Client.subscribe("transaction/request/#");
 			Client.subscribe("transfer/request/#");
 			Client.subscribe("verification/request/#");
@@ -54,10 +58,10 @@ public class SenderLogic {
 		
     	
     }
-    
+    /**
+     * This Method attempts to reconnect o server
+     */
 	public void reConnectToBroker() {
-    	// Attempt to reconnect to server
-    	
         connOpts.setCleanSession(false);
         connOpts.setAutomaticReconnect(true);
         
@@ -71,6 +75,18 @@ public class SenderLogic {
     }
     
     
+	/**
+	 * 
+	 * @param Topic
+	 * @param message
+	 * 
+	 * Check if the client is connected.
+	 * if not, attempt to reconnect to broker
+	 * 
+	 * Send the Message to the corresponding Topic by
+	 * Configure the message for retained and quality of service
+	 * And try to send message if connected
+	 */
 	public void sendMessage(String Topic, String message) {
 		//configure and send the appropriate message to the specified topic
 		
