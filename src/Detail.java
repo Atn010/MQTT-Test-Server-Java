@@ -1,7 +1,7 @@
 /**
- * @author atn010
+ * @author Antonius George Sunggeriwan <atn010g@gmail.com>
  *
- */s
+ */
 class Detail extends Account {
 	String Password;
 

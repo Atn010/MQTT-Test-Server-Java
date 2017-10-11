@@ -1,6 +1,6 @@
 /**
- * @author atn010
- *
+ * @author Antonius George Sunggeriwan <atn010g@gmail.com>
+ * 
  */
 import java.util.ArrayList;
 

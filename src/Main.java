@@ -1,5 +1,5 @@
 /**
- * @author atn010
+ * @author Antonius George Sunggeriwan <atn010g@gmail.com>
  *
  */
 import java.util.*;
@@ -10,7 +10,6 @@ import java.util.*;
 public class Main{
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		Data data = Data.getInstance();
 		SenderLogic sender = SenderLogic.getInstance();
 		ReceiverLogic connLogic = new ReceiverLogic();
