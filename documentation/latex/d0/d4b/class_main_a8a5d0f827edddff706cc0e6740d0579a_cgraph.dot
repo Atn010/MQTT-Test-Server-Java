@@ -1,0 +1,20 @@
+digraph "Main.main"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node5 [label="Main.main",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node5 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+  Node6 [label="Data.getInstance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/d07/class_data.html#a27528b605620f49e1bd82b8ce7ff31be"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="Data.Data",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/d07/class_data.html#ac9188dcb0fca3b16e8111ce3ee5c2a1c"];
+  Node5 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="SenderLogic.getInstance",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/d79/class_sender_logic.html#a9a5c16eb2a183e6d1ea994016830d3c9"];
+  Node8 -> Node9 [color="midnightblue",fontsize="10",style="solid"];
+  Node9 [label="SenderLogic.SenderLogic",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/d79/class_sender_logic.html#a0eddf4a54cf777c324862dd767fa09b9"];
+  Node9 -> Node10 [color="midnightblue",fontsize="10",style="solid"];
+  Node10 [label="SenderLogic.ConnectToBroker",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/d79/class_sender_logic.html#a3f1fe663014baf7e3bbc5060740a665b"];
+  Node5 -> Node11 [color="midnightblue",fontsize="10",style="solid"];
+  Node11 [label="Main.dataEmpty",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d0/d4b/class_main.html#a6c9f248db7c5afa42903c22eaba39d4d"];
+  Node11 -> Node6 [color="midnightblue",fontsize="10",style="solid"];
+}

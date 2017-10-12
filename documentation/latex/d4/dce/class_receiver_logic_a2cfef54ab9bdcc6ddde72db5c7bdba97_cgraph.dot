@@ -1,0 +1,11 @@
+digraph "ReceiverLogic.messageArrived"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node6 [label="ReceiverLogic.messageArrived",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node6 -> Node7 [color="midnightblue",fontsize="10",style="solid"];
+  Node7 [label="SenderLogic.sendMessage",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/d79/class_sender_logic.html#a005680db1e66a7a994e5f30ee79b1bca"];
+  Node7 -> Node8 [color="midnightblue",fontsize="10",style="solid"];
+  Node8 [label="SenderLogic.reConnectToBroker",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/d79/class_sender_logic.html#a8e4dbcdb4fe1fe4c2b381f06b6fdb2b7"];
+}

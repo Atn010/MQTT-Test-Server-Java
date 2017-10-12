@@ -1,0 +1,60 @@
+\hypertarget{class_data}{}\section{Data Class Reference}
+\label{class_data}\index{Data@{Data}}
+
+
+Collaboration diagram for Data\+:
+% FIG 0
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_data_ac9188dcb0fca3b16e8111ce3ee5c2a1c}{Data} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_data}{Data} \hyperlink{class_data_a27528b605620f49e1bd82b8ce7ff31be}{get\+Instance} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 8 of file Data.\+java.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_data_ac9188dcb0fca3b16e8111ce3ee5c2a1c}\label{class_data_ac9188dcb0fca3b16e8111ce3ee5c2a1c}} 
+\index{Data@{Data}!Data@{Data}}
+\index{Data@{Data}!Data@{Data}}
+\subsubsection{\texorpdfstring{Data()}{Data()}}
+{\footnotesize\ttfamily Data.\+Data (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 22 of file Data.\+java.
+
+Here is the caller graph for this function\+:
+% FIG 1
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_data_a27528b605620f49e1bd82b8ce7ff31be}\label{class_data_a27528b605620f49e1bd82b8ce7ff31be}} 
+\index{Data@{Data}!get\+Instance@{get\+Instance}}
+\index{get\+Instance@{get\+Instance}!Data@{Data}}
+\subsubsection{\texorpdfstring{get\+Instance()}{getInstance()}}
+{\footnotesize\ttfamily static \hyperlink{class_data}{Data} Data.\+get\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 11 of file Data.\+java.
+
+Here is the call graph for this function\+:
+% FIG 2
+Here is the caller graph for this function\+:
+% FIG 3
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{_data_8java}{Data.\+java}\end{DoxyCompactItemize}

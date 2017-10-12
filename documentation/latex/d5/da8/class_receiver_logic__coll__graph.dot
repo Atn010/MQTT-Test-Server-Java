@@ -1,0 +1,25 @@
+digraph "ReceiverLogic"
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node2 [label="ReceiverLogic",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black"];
+  Node3 -> Node2 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node3 [label="MqttCallback",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node4 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" sender" ];
+  Node4 [label="SenderLogic",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$d1/d79/class_sender_logic.html"];
+  Node5 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" connOpts" ];
+  Node5 [label="MqttConnectOptions",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node6 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" Client" ];
+  Node6 [label="MqttClient",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node7 -> Node4 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" persistence" ];
+  Node7 [label="MemoryPersistence",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node8 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" data" ];
+  Node8 [label="Data",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$dc/d07/class_data.html"];
+  Node9 -> Node8 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" transList" ];
+  Node9 [label="ArrayList\< objList \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node10 -> Node8 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" accMoney" ];
+  Node10 [label="ArrayList\< Money \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+  Node11 -> Node8 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" accDetail" ];
+  Node11 [label="ArrayList\< Detail \>",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled"];
+}
