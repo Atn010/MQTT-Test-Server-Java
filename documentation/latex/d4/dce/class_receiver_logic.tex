@@ -1,0 +1,94 @@
+\hypertarget{class_receiver_logic}{}\section{Receiver\+Logic Class Reference}
+\label{class_receiver_logic}\index{Receiver\+Logic@{Receiver\+Logic}}
+
+
+Inheritance diagram for Receiver\+Logic\+:
+% FIG 0
+
+
+Collaboration diagram for Receiver\+Logic\+:
+% FIG 1
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_receiver_logic_a63eb05bf9e4563a5d5b70b7754cf552a}{Receiver\+Logic} ()
+\item 
+void \hyperlink{class_receiver_logic_a10d83eeaf19038a5c41e2038b7dc450a}{connection\+Lost} (Throwable arg0)
+\item 
+void \hyperlink{class_receiver_logic_afbfe0394c17c18e33ed70e7ec8eeea84}{delivery\+Complete} (I\+Mqtt\+Delivery\+Token arg0)
+\item 
+void \hyperlink{class_receiver_logic_a2cfef54ab9bdcc6ddde72db5c7bdba97}{message\+Arrived} (String Topic, Mqtt\+Message Message)  throws Exception 
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Antonius George Sunggeriwan \href{mailto:atn010g@gmail.com}{\tt atn010g@gmail.\+com}
+\end{DoxyAuthor}
+This class is responsible for receiving Message from the Clients thru the Broker. The message is retrieve in message\+Arrived method and redirected to the an appropriate method for the type of message from different topic. 
+
+Definition at line 22 of file Receiver\+Logic.\+java.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_receiver_logic_a63eb05bf9e4563a5d5b70b7754cf552a}\label{class_receiver_logic_a63eb05bf9e4563a5d5b70b7754cf552a}} 
+\index{Receiver\+Logic@{Receiver\+Logic}!Receiver\+Logic@{Receiver\+Logic}}
+\index{Receiver\+Logic@{Receiver\+Logic}!Receiver\+Logic@{Receiver\+Logic}}
+\subsubsection{\texorpdfstring{Receiver\+Logic()}{ReceiverLogic()}}
+{\footnotesize\ttfamily Receiver\+Logic.\+Receiver\+Logic (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 26 of file Receiver\+Logic.\+java.
+
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_receiver_logic_a10d83eeaf19038a5c41e2038b7dc450a}\label{class_receiver_logic_a10d83eeaf19038a5c41e2038b7dc450a}} 
+\index{Receiver\+Logic@{Receiver\+Logic}!connection\+Lost@{connection\+Lost}}
+\index{connection\+Lost@{connection\+Lost}!Receiver\+Logic@{Receiver\+Logic}}
+\subsubsection{\texorpdfstring{connection\+Lost()}{connectionLost()}}
+{\footnotesize\ttfamily void Receiver\+Logic.\+connection\+Lost (\begin{DoxyParamCaption}\item[{Throwable}]{arg0 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 31 of file Receiver\+Logic.\+java.
+
+\mbox{\Hypertarget{class_receiver_logic_afbfe0394c17c18e33ed70e7ec8eeea84}\label{class_receiver_logic_afbfe0394c17c18e33ed70e7ec8eeea84}} 
+\index{Receiver\+Logic@{Receiver\+Logic}!delivery\+Complete@{delivery\+Complete}}
+\index{delivery\+Complete@{delivery\+Complete}!Receiver\+Logic@{Receiver\+Logic}}
+\subsubsection{\texorpdfstring{delivery\+Complete()}{deliveryComplete()}}
+{\footnotesize\ttfamily void Receiver\+Logic.\+delivery\+Complete (\begin{DoxyParamCaption}\item[{I\+Mqtt\+Delivery\+Token}]{arg0 }\end{DoxyParamCaption})}
+
+
+
+Definition at line 36 of file Receiver\+Logic.\+java.
+
+\mbox{\Hypertarget{class_receiver_logic_a2cfef54ab9bdcc6ddde72db5c7bdba97}\label{class_receiver_logic_a2cfef54ab9bdcc6ddde72db5c7bdba97}} 
+\index{Receiver\+Logic@{Receiver\+Logic}!message\+Arrived@{message\+Arrived}}
+\index{message\+Arrived@{message\+Arrived}!Receiver\+Logic@{Receiver\+Logic}}
+\subsubsection{\texorpdfstring{message\+Arrived()}{messageArrived()}}
+{\footnotesize\ttfamily void Receiver\+Logic.\+message\+Arrived (\begin{DoxyParamCaption}\item[{String}]{Topic,  }\item[{Mqtt\+Message}]{Message }\end{DoxyParamCaption}) throws Exception}
+
+The message\+Arrived method is provided by the library to receive message from the broker. The method included the corresponding Topic. that is previously subscribed to and Message. Split the Topic into parts and store it in a variable
+
+$<$ This variable store the name of the main topic
+
+$<$ This variable store the type of the Topic
+
+$<$ This variable store the receiver of the
+
+$<$ This method separates the topic and run
+
+the appropriate method 
+
+Definition at line 46 of file Receiver\+Logic.\+java.
+
+Here is the call graph for this function\+:
+% FIG 2
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{_receiver_logic_8java}{Receiver\+Logic.\+java}\end{DoxyCompactItemize}

@@ -38,7 +38,7 @@ public class SenderLogic {
     }
     
     /**
-     * Connect to the Broker
+     * Connect to the Broker.
      */
     public void ConnectToBroker() {
     	connOpts.setCleanSession(false);
@@ -58,7 +58,7 @@ public class SenderLogic {
     }
     
     /**
-     * This Method attempts to reconnect o server
+     * This Method attempts to reconnect to the broker
      */
 	public void reConnectToBroker() {
         connOpts.setCleanSession(false);
@@ -74,17 +74,14 @@ public class SenderLogic {
     }
     
     
-	/**
+	/**	
+	 * Check if the client is connected. If not, attempt to reconnect to broker.
 	 * 
-	 * @param Topic
-	 * @param message
+	 * Send the Message to the corresponding Topic by configuring the message for retained and quality of service and the send message.
 	 * 
-	 * Check if the client is connected.
-	 * if not, attempt to reconnect to broker
-	 * 
-	 * Send the Message to the corresponding Topic by
-	 * Configure the message for retained and quality of service
-	 * And try to send message if connected
+	 * @param Topic The Topic to Publish
+	 * @param message The Message to Publish
+
 	 */
 	public void sendMessage(String Topic, String message) {
 		//configure and send the appropriate message to the specified topic

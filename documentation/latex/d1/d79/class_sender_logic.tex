@@ -1,0 +1,117 @@
+\hypertarget{class_sender_logic}{}\section{Sender\+Logic Class Reference}
+\label{class_sender_logic}\index{Sender\+Logic@{Sender\+Logic}}
+
+
+Collaboration diagram for Sender\+Logic\+:
+% FIG 0
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{class_sender_logic_a0eddf4a54cf777c324862dd767fa09b9}{Sender\+Logic} ()
+\item 
+void \hyperlink{class_sender_logic_a3f1fe663014baf7e3bbc5060740a665b}{Connect\+To\+Broker} ()
+\item 
+void \hyperlink{class_sender_logic_a8e4dbcdb4fe1fe4c2b381f06b6fdb2b7}{re\+Connect\+To\+Broker} ()
+\item 
+void \hyperlink{class_sender_logic_a005680db1e66a7a994e5f30ee79b1bca}{send\+Message} (String Topic, String message)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \hyperlink{class_sender_logic}{Sender\+Logic} \hyperlink{class_sender_logic_a9a5c16eb2a183e6d1ea994016830d3c9}{get\+Instance} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+
+
+Definition at line 13 of file Sender\+Logic.\+java.
+
+
+
+\subsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{class_sender_logic_a0eddf4a54cf777c324862dd767fa09b9}\label{class_sender_logic_a0eddf4a54cf777c324862dd767fa09b9}} 
+\index{Sender\+Logic@{Sender\+Logic}!Sender\+Logic@{Sender\+Logic}}
+\index{Sender\+Logic@{Sender\+Logic}!Sender\+Logic@{Sender\+Logic}}
+\subsubsection{\texorpdfstring{Sender\+Logic()}{SenderLogic()}}
+{\footnotesize\ttfamily Sender\+Logic.\+Sender\+Logic (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 29 of file Sender\+Logic.\+java.
+
+Here is the call graph for this function\+:
+% FIG 1
+Here is the caller graph for this function\+:
+% FIG 2
+
+
+\subsection{Member Function Documentation}
+\mbox{\Hypertarget{class_sender_logic_a3f1fe663014baf7e3bbc5060740a665b}\label{class_sender_logic_a3f1fe663014baf7e3bbc5060740a665b}} 
+\index{Sender\+Logic@{Sender\+Logic}!Connect\+To\+Broker@{Connect\+To\+Broker}}
+\index{Connect\+To\+Broker@{Connect\+To\+Broker}!Sender\+Logic@{Sender\+Logic}}
+\subsubsection{\texorpdfstring{Connect\+To\+Broker()}{ConnectToBroker()}}
+{\footnotesize\ttfamily void Sender\+Logic.\+Connect\+To\+Broker (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+Connect to the Broker. 
+
+Definition at line 43 of file Sender\+Logic.\+java.
+
+Here is the caller graph for this function\+:
+% FIG 3
+\mbox{\Hypertarget{class_sender_logic_a9a5c16eb2a183e6d1ea994016830d3c9}\label{class_sender_logic_a9a5c16eb2a183e6d1ea994016830d3c9}} 
+\index{Sender\+Logic@{Sender\+Logic}!get\+Instance@{get\+Instance}}
+\index{get\+Instance@{get\+Instance}!Sender\+Logic@{Sender\+Logic}}
+\subsubsection{\texorpdfstring{get\+Instance()}{getInstance()}}
+{\footnotesize\ttfamily static \hyperlink{class_sender_logic}{Sender\+Logic} Sender\+Logic.\+get\+Instance (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Definition at line 15 of file Sender\+Logic.\+java.
+
+Here is the call graph for this function\+:
+% FIG 4
+Here is the caller graph for this function\+:
+% FIG 5
+\mbox{\Hypertarget{class_sender_logic_a8e4dbcdb4fe1fe4c2b381f06b6fdb2b7}\label{class_sender_logic_a8e4dbcdb4fe1fe4c2b381f06b6fdb2b7}} 
+\index{Sender\+Logic@{Sender\+Logic}!re\+Connect\+To\+Broker@{re\+Connect\+To\+Broker}}
+\index{re\+Connect\+To\+Broker@{re\+Connect\+To\+Broker}!Sender\+Logic@{Sender\+Logic}}
+\subsubsection{\texorpdfstring{re\+Connect\+To\+Broker()}{reConnectToBroker()}}
+{\footnotesize\ttfamily void Sender\+Logic.\+re\+Connect\+To\+Broker (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+This Method attempts to reconnect to the broker 
+
+Definition at line 63 of file Sender\+Logic.\+java.
+
+Here is the caller graph for this function\+:
+% FIG 6
+\mbox{\Hypertarget{class_sender_logic_a005680db1e66a7a994e5f30ee79b1bca}\label{class_sender_logic_a005680db1e66a7a994e5f30ee79b1bca}} 
+\index{Sender\+Logic@{Sender\+Logic}!send\+Message@{send\+Message}}
+\index{send\+Message@{send\+Message}!Sender\+Logic@{Sender\+Logic}}
+\subsubsection{\texorpdfstring{send\+Message()}{sendMessage()}}
+{\footnotesize\ttfamily void Sender\+Logic.\+send\+Message (\begin{DoxyParamCaption}\item[{String}]{Topic,  }\item[{String}]{message }\end{DoxyParamCaption})}
+
+Check if the client is connected. If not, attempt to reconnect to broker.
+
+Send the Message to the corresponding Topic by configuring the message for retained and quality of service and the send message.
+
+
+\begin{DoxyParams}{Parameters}
+{\em Topic} & The Topic to Publish \\
+\hline
+{\em message} & The Message to Publish \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 86 of file Sender\+Logic.\+java.
+
+Here is the call graph for this function\+:
+% FIG 7
+Here is the caller graph for this function\+:
+% FIG 8
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+src/\hyperlink{_sender_logic_8java}{Sender\+Logic.\+java}\end{DoxyCompactItemize}
